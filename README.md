@@ -15,7 +15,7 @@ Windows 의 데스크탑 진입 전의 모듈인만큼 문제가 발생 시 최�
 ## How to create interop library
 
 1. credentialprovider.tlb 파일 생성
-   - midl "C:\Program Files (x86)\Windows Kits\10\Include\10.0.15063.0\um\credentialprovider.idl"
+   - midl /target NT60 "C:\Program Files (x86)\Windows Kits\10\Include\10.0.15063.0\um\credentialprovider.idl"
 2. interop.dll 파일 생성
    - tlbImp2.exe credentialprovider.tlb /out:CredentialProvider.Interop.dll /unsafe /verbose /preservesig
 
