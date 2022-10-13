@@ -14,6 +14,12 @@ Windows 의 데스크탑 진입 전의 모듈인만큼 문제가 발생 시 최�
 
 ## How to create interop library
 
+**x64 Native Tools Command Prompt VS 2022** 프롬프트를 실행하여 아래 명령을 순서대로 실행한다. 
+
+**주의 : Developer Command Prompt for VS2022 아님**
+
+
+
 1. credentialprovider.tlb 파일 생성
    - midl /target NT60 "C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\um\credentialprovider.idl"
 2. interop.dll 파일 생성
