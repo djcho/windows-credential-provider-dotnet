@@ -12,6 +12,15 @@ Windows 의 데스크탑 진입 전의 모듈인만큼 문제가 발생 시 최�
 
 
 
+## How to create interop library
+
+1. credentialprovider.tlb 파일 생성
+   - midl "C:\Program Files (x86)\Windows Kits\10\Include\10.0.15063.0\um\credentialprovider.idl"
+2. interop.dll 파일 생성
+   - tlbImp2.exe credentialprovider.tlb /out:CredentialProvider.Interop.dll /unsafe /verbose /preservesig
+
+
+
 ## Installation
 
 Windows Credential Provider 모듈은 LogonUI.exe 에게 호출되는 입장이기 때문에 시스템에 우선 등록해야 한다. 등록은 아래 형식으로 .reg 파일을 생성하여 등록한다.
@@ -34,6 +43,7 @@ Windows Registry Editor Version 5.00
 
 ## Dependency
 
+-  Windows SDK
 -  TlbImp2.exe : https://github.com/clrinterop/TypeLibraryImporter
   - 기본  Microsoft 에서 제공하는 tlbimp.exe 를 사용하여 컴파일할 경우에는 HRESULT 반환 유형을 생략하고 .NET의 예외(Exception)을 사용하도록 변경되므로 Winlogon 또는 credUI 호스트앱이 예외를 발생시키면서 프로스가 종료되는 이슈가 있다. 때문에 이를 해결하려면 tlbimp2.exe 를 사용해 컴파일 해야 한다.
 
