@@ -1,0 +1,1 @@
+# windows-credential-provider-dotnet
