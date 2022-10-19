@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cswcp", "cswcp\cswcp.csproj", "{BBFC57E3-1491-4221-AB63-6034466FD5D5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpCredentialProvider", "CSharpCredentialProvider\CSharpCredentialProvider.csproj", "{3FD2BA7E-B14C-4691-9517-51011434F147}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{BBFC57E3-1491-4221-AB63-6034466FD5D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BBFC57E3-1491-4221-AB63-6034466FD5D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BBFC57E3-1491-4221-AB63-6034466FD5D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BBFC57E3-1491-4221-AB63-6034466FD5D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FD2BA7E-B14C-4691-9517-51011434F147}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FD2BA7E-B14C-4691-9517-51011434F147}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FD2BA7E-B14C-4691-9517-51011434F147}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FD2BA7E-B14C-4691-9517-51011434F147}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

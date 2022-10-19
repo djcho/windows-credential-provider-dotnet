@@ -6,9 +6,9 @@
  /* File created by MIDL compiler version 8.01.0622 */
 /* at Tue Jan 19 12:14:07 2038
  */
-/* Compiler settings for C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\um\credentialprovider.idl:
+/* Compiler settings for .\credentialprovider.idl:
     Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 8.01.0622 
-    protocol : dce , ms_ext, c_ext, robust
+    protocol : all , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
          __declspec(uuid()), __declspec(selectany), __declspec(novtable)
@@ -30,10 +30,6 @@
 #error this stub requires an updated version of <rpcndr.h>
 #endif /* __RPCNDR_H_VERSION__ */
 
-#ifndef COM_NO_WINDOWS_H
-#include "windows.h"
-#include "ole2.h"
-#endif /*COM_NO_WINDOWS_H*/
 
 #ifndef __credentialprovider_h__
 #define __credentialprovider_h__
@@ -43,6 +39,13 @@
 #endif
 
 /* Forward Declarations */ 
+
+#ifndef __ICredentialProviderCredentialEvents_FWD_DEFINED__
+#define __ICredentialProviderCredentialEvents_FWD_DEFINED__
+typedef interface ICredentialProviderCredentialEvents ICredentialProviderCredentialEvents;
+
+#endif 	/* __ICredentialProviderCredentialEvents_FWD_DEFINED__ */
+
 
 #ifndef __ICredentialProviderCredential_FWD_DEFINED__
 #define __ICredentialProviderCredential_FWD_DEFINED__
@@ -65,11 +68,11 @@ typedef interface IConnectableCredentialProviderCredential IConnectableCredentia
 #endif 	/* __IConnectableCredentialProviderCredential_FWD_DEFINED__ */
 
 
-#ifndef __ICredentialProviderCredentialEvents_FWD_DEFINED__
-#define __ICredentialProviderCredentialEvents_FWD_DEFINED__
-typedef interface ICredentialProviderCredentialEvents ICredentialProviderCredentialEvents;
+#ifndef __ICredentialProviderEvents_FWD_DEFINED__
+#define __ICredentialProviderEvents_FWD_DEFINED__
+typedef interface ICredentialProviderEvents ICredentialProviderEvents;
 
-#endif 	/* __ICredentialProviderCredentialEvents_FWD_DEFINED__ */
+#endif 	/* __ICredentialProviderEvents_FWD_DEFINED__ */
 
 
 #ifndef __ICredentialProvider_FWD_DEFINED__
@@ -77,13 +80,6 @@ typedef interface ICredentialProviderCredentialEvents ICredentialProviderCredent
 typedef interface ICredentialProvider ICredentialProvider;
 
 #endif 	/* __ICredentialProvider_FWD_DEFINED__ */
-
-
-#ifndef __ICredentialProviderEvents_FWD_DEFINED__
-#define __ICredentialProviderEvents_FWD_DEFINED__
-typedef interface ICredentialProviderEvents ICredentialProviderEvents;
-
-#endif 	/* __ICredentialProviderEvents_FWD_DEFINED__ */
 
 
 #ifndef __ICredentialProviderFilter_FWD_DEFINED__
@@ -327,17 +323,17 @@ typedef struct V1WinBioCredentialProvider V1WinBioCredentialProvider;
 #endif 	/* __V1WinBioCredentialProvider_FWD_DEFINED__ */
 
 
-/* header files for imported files */
-#include "wtypes.h"
-#include "shobjidl_core.h"
-
 #ifdef __cplusplus
 extern "C"{
 #endif 
 
 
-/* interface __MIDL_itf_credentialprovider_0000_0000 */
-/* [local] */ 
+
+#ifndef __CredentialProviders_LIBRARY_DEFINED__
+#define __CredentialProviders_LIBRARY_DEFINED__
+
+/* library CredentialProviders */
+/* [uuid] */ 
 
 #include <winapifamily.h>
 #pragma region Desktop Family
@@ -454,9 +450,219 @@ typedef _Return_type_success_(return >= 0) LONG NTSTATUS;
 #define CREDENTIAL_PROVIDER_NO_DEFAULT       ((DWORD)-1)
 
 
+#if (NTDDI_VERSION >= NTDDI_WIN8)
+DEFINE_GUID(Identity_LocalUserProvider, 0xA198529B, 0x730F, 0x4089, 0xB6, 0x46, 0xA1, 0x25, 0x57, 0xF5, 0x66, 0x5E);
+#endif // (NTDDI_VERSION >= NTDDI_WIN8)
 
-extern RPC_IF_HANDLE __MIDL_itf_credentialprovider_0000_0000_v0_0_c_ifspec;
-extern RPC_IF_HANDLE __MIDL_itf_credentialprovider_0000_0000_v0_0_s_ifspec;
+EXTERN_C const IID LIBID_CredentialProviders;
+
+#ifndef __ICredentialProviderCredentialEvents_INTERFACE_DEFINED__
+#define __ICredentialProviderCredentialEvents_INTERFACE_DEFINED__
+
+/* interface ICredentialProviderCredentialEvents */
+/* [uuid][ref][object] */ 
+
+
+EXTERN_C const IID IID_ICredentialProviderCredentialEvents;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("fa6fa76b-66b7-4b11-95f1-86171118e816")
+    ICredentialProviderCredentialEvents : public IUnknown
+    {
+    public:
+        virtual HRESULT STDMETHODCALLTYPE SetFieldState( 
+            /* [in] */ ICredentialProviderCredential *pcpc,
+            /* [in] */ DWORD dwFieldID,
+            /* [in] */ CREDENTIAL_PROVIDER_FIELD_STATE cpfs) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetFieldInteractiveState( 
+            /* [in] */ ICredentialProviderCredential *pcpc,
+            /* [in] */ DWORD dwFieldID,
+            /* [in] */ CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE cpfis) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetFieldString( 
+            /* [in] */ ICredentialProviderCredential *pcpc,
+            /* [in] */ DWORD dwFieldID,
+            /* [unique][string][in] */ LPCWSTR psz) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetFieldCheckbox( 
+            /* [in] */ ICredentialProviderCredential *pcpc,
+            /* [in] */ DWORD dwFieldID,
+            /* [in] */ BOOL bChecked,
+            /* [in] */ LPCWSTR pszLabel) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetFieldBitmap( 
+            /* [in] */ ICredentialProviderCredential *pcpc,
+            /* [in] */ DWORD dwFieldID,
+            /* [in] */ HANDLE hbmp) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetFieldComboBoxSelectedItem( 
+            /* [in] */ ICredentialProviderCredential *pcpc,
+            /* [in] */ DWORD dwFieldID,
+            /* [in] */ DWORD dwSelectedItem) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE DeleteFieldComboBoxItem( 
+            /* [in] */ ICredentialProviderCredential *pcpc,
+            /* [in] */ DWORD dwFieldID,
+            /* [in] */ DWORD dwItem) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE AppendFieldComboBoxItem( 
+            /* [in] */ ICredentialProviderCredential *pcpc,
+            /* [in] */ DWORD dwFieldID,
+            /* [string][in] */ LPCWSTR pszItem) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE SetFieldSubmitButton( 
+            /* [in] */ ICredentialProviderCredential *pcpc,
+            /* [in] */ DWORD dwFieldID,
+            /* [in] */ DWORD dwAdjacentTo) = 0;
+        
+        virtual HRESULT STDMETHODCALLTYPE OnCreatingWindow( 
+            /* [out] */ HWND *phwndOwner) = 0;
+        
+    };
+    
+    
+#else 	/* C style interface */
+
+    typedef struct ICredentialProviderCredentialEventsVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
+            ICredentialProviderCredentialEvents * This,
+            /* [in] */ REFIID riid,
+            /* [annotation][iid_is][out] */ 
+            _COM_Outptr_  void **ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE *AddRef )( 
+            ICredentialProviderCredentialEvents * This);
+        
+        ULONG ( STDMETHODCALLTYPE *Release )( 
+            ICredentialProviderCredentialEvents * This);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetFieldState )( 
+            ICredentialProviderCredentialEvents * This,
+            /* [in] */ ICredentialProviderCredential *pcpc,
+            /* [in] */ DWORD dwFieldID,
+            /* [in] */ CREDENTIAL_PROVIDER_FIELD_STATE cpfs);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetFieldInteractiveState )( 
+            ICredentialProviderCredentialEvents * This,
+            /* [in] */ ICredentialProviderCredential *pcpc,
+            /* [in] */ DWORD dwFieldID,
+            /* [in] */ CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE cpfis);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetFieldString )( 
+            ICredentialProviderCredentialEvents * This,
+            /* [in] */ ICredentialProviderCredential *pcpc,
+            /* [in] */ DWORD dwFieldID,
+            /* [unique][string][in] */ LPCWSTR psz);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetFieldCheckbox )( 
+            ICredentialProviderCredentialEvents * This,
+            /* [in] */ ICredentialProviderCredential *pcpc,
+            /* [in] */ DWORD dwFieldID,
+            /* [in] */ BOOL bChecked,
+            /* [in] */ LPCWSTR pszLabel);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetFieldBitmap )( 
+            ICredentialProviderCredentialEvents * This,
+            /* [in] */ ICredentialProviderCredential *pcpc,
+            /* [in] */ DWORD dwFieldID,
+            /* [in] */ HANDLE hbmp);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetFieldComboBoxSelectedItem )( 
+            ICredentialProviderCredentialEvents * This,
+            /* [in] */ ICredentialProviderCredential *pcpc,
+            /* [in] */ DWORD dwFieldID,
+            /* [in] */ DWORD dwSelectedItem);
+        
+        HRESULT ( STDMETHODCALLTYPE *DeleteFieldComboBoxItem )( 
+            ICredentialProviderCredentialEvents * This,
+            /* [in] */ ICredentialProviderCredential *pcpc,
+            /* [in] */ DWORD dwFieldID,
+            /* [in] */ DWORD dwItem);
+        
+        HRESULT ( STDMETHODCALLTYPE *AppendFieldComboBoxItem )( 
+            ICredentialProviderCredentialEvents * This,
+            /* [in] */ ICredentialProviderCredential *pcpc,
+            /* [in] */ DWORD dwFieldID,
+            /* [string][in] */ LPCWSTR pszItem);
+        
+        HRESULT ( STDMETHODCALLTYPE *SetFieldSubmitButton )( 
+            ICredentialProviderCredentialEvents * This,
+            /* [in] */ ICredentialProviderCredential *pcpc,
+            /* [in] */ DWORD dwFieldID,
+            /* [in] */ DWORD dwAdjacentTo);
+        
+        HRESULT ( STDMETHODCALLTYPE *OnCreatingWindow )( 
+            ICredentialProviderCredentialEvents * This,
+            /* [out] */ HWND *phwndOwner);
+        
+        END_INTERFACE
+    } ICredentialProviderCredentialEventsVtbl;
+
+    interface ICredentialProviderCredentialEvents
+    {
+        CONST_VTBL struct ICredentialProviderCredentialEventsVtbl *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS
+
+
+#define ICredentialProviderCredentialEvents_QueryInterface(This,riid,ppvObject)	\
+    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
+
+#define ICredentialProviderCredentialEvents_AddRef(This)	\
+    ( (This)->lpVtbl -> AddRef(This) ) 
+
+#define ICredentialProviderCredentialEvents_Release(This)	\
+    ( (This)->lpVtbl -> Release(This) ) 
+
+
+#define ICredentialProviderCredentialEvents_SetFieldState(This,pcpc,dwFieldID,cpfs)	\
+    ( (This)->lpVtbl -> SetFieldState(This,pcpc,dwFieldID,cpfs) ) 
+
+#define ICredentialProviderCredentialEvents_SetFieldInteractiveState(This,pcpc,dwFieldID,cpfis)	\
+    ( (This)->lpVtbl -> SetFieldInteractiveState(This,pcpc,dwFieldID,cpfis) ) 
+
+#define ICredentialProviderCredentialEvents_SetFieldString(This,pcpc,dwFieldID,psz)	\
+    ( (This)->lpVtbl -> SetFieldString(This,pcpc,dwFieldID,psz) ) 
+
+#define ICredentialProviderCredentialEvents_SetFieldCheckbox(This,pcpc,dwFieldID,bChecked,pszLabel)	\
+    ( (This)->lpVtbl -> SetFieldCheckbox(This,pcpc,dwFieldID,bChecked,pszLabel) ) 
+
+#define ICredentialProviderCredentialEvents_SetFieldBitmap(This,pcpc,dwFieldID,hbmp)	\
+    ( (This)->lpVtbl -> SetFieldBitmap(This,pcpc,dwFieldID,hbmp) ) 
+
+#define ICredentialProviderCredentialEvents_SetFieldComboBoxSelectedItem(This,pcpc,dwFieldID,dwSelectedItem)	\
+    ( (This)->lpVtbl -> SetFieldComboBoxSelectedItem(This,pcpc,dwFieldID,dwSelectedItem) ) 
+
+#define ICredentialProviderCredentialEvents_DeleteFieldComboBoxItem(This,pcpc,dwFieldID,dwItem)	\
+    ( (This)->lpVtbl -> DeleteFieldComboBoxItem(This,pcpc,dwFieldID,dwItem) ) 
+
+#define ICredentialProviderCredentialEvents_AppendFieldComboBoxItem(This,pcpc,dwFieldID,pszItem)	\
+    ( (This)->lpVtbl -> AppendFieldComboBoxItem(This,pcpc,dwFieldID,pszItem) ) 
+
+#define ICredentialProviderCredentialEvents_SetFieldSubmitButton(This,pcpc,dwFieldID,dwAdjacentTo)	\
+    ( (This)->lpVtbl -> SetFieldSubmitButton(This,pcpc,dwFieldID,dwAdjacentTo) ) 
+
+#define ICredentialProviderCredentialEvents_OnCreatingWindow(This,phwndOwner)	\
+    ( (This)->lpVtbl -> OnCreatingWindow(This,phwndOwner) ) 
+
+#endif /* COBJMACROS */
+
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __ICredentialProviderCredentialEvents_INTERFACE_DEFINED__ */
+
 
 #ifndef __ICredentialProviderCredential_INTERFACE_DEFINED__
 #define __ICredentialProviderCredential_INTERFACE_DEFINED__
@@ -500,7 +706,7 @@ EXTERN_C const IID IID_ICredentialProviderCredential;
         virtual HRESULT STDMETHODCALLTYPE GetBitmapValue( 
             /* [in] */ DWORD dwFieldID,
             /* [annotation][out] */ 
-            _Outptr_result_nullonfailure_  HBITMAP *phbmp) = 0;
+            _Outptr_result_nullonfailure_  HANDLE *phbmp) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE GetCheckboxValue( 
             /* [in] */ DWORD dwFieldID,
@@ -616,7 +822,7 @@ EXTERN_C const IID IID_ICredentialProviderCredential;
             ICredentialProviderCredential * This,
             /* [in] */ DWORD dwFieldID,
             /* [annotation][out] */ 
-            _Outptr_result_nullonfailure_  HBITMAP *phbmp);
+            _Outptr_result_nullonfailure_  HANDLE *phbmp);
         
         HRESULT ( STDMETHODCALLTYPE *GetCheckboxValue )( 
             ICredentialProviderCredential * This,
@@ -937,7 +1143,7 @@ EXTERN_C const IID IID_IConnectableCredentialProviderCredential;
             IConnectableCredentialProviderCredential * This,
             /* [in] */ DWORD dwFieldID,
             /* [annotation][out] */ 
-            _Outptr_result_nullonfailure_  HBITMAP *phbmp);
+            _Outptr_result_nullonfailure_  HANDLE *phbmp);
         
         HRESULT ( STDMETHODCALLTYPE *GetCheckboxValue )( 
             IConnectableCredentialProviderCredential * This,
@@ -1108,156 +1314,55 @@ EXTERN_C const IID IID_IConnectableCredentialProviderCredential;
 #endif 	/* __IConnectableCredentialProviderCredential_INTERFACE_DEFINED__ */
 
 
-#ifndef __ICredentialProviderCredentialEvents_INTERFACE_DEFINED__
-#define __ICredentialProviderCredentialEvents_INTERFACE_DEFINED__
+#ifndef __ICredentialProviderEvents_INTERFACE_DEFINED__
+#define __ICredentialProviderEvents_INTERFACE_DEFINED__
 
-/* interface ICredentialProviderCredentialEvents */
+/* interface ICredentialProviderEvents */
 /* [uuid][ref][object] */ 
 
 
-EXTERN_C const IID IID_ICredentialProviderCredentialEvents;
+EXTERN_C const IID IID_ICredentialProviderEvents;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
     
-    MIDL_INTERFACE("fa6fa76b-66b7-4b11-95f1-86171118e816")
-    ICredentialProviderCredentialEvents : public IUnknown
+    MIDL_INTERFACE("34201e5a-a787-41a3-a5a4-bd6dcf2a854e")
+    ICredentialProviderEvents : public IUnknown
     {
     public:
-        virtual HRESULT STDMETHODCALLTYPE SetFieldState( 
-            /* [in] */ ICredentialProviderCredential *pcpc,
-            /* [in] */ DWORD dwFieldID,
-            /* [in] */ CREDENTIAL_PROVIDER_FIELD_STATE cpfs) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetFieldInteractiveState( 
-            /* [in] */ ICredentialProviderCredential *pcpc,
-            /* [in] */ DWORD dwFieldID,
-            /* [in] */ CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE cpfis) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetFieldString( 
-            /* [in] */ ICredentialProviderCredential *pcpc,
-            /* [in] */ DWORD dwFieldID,
-            /* [unique][string][in] */ LPCWSTR psz) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetFieldCheckbox( 
-            /* [in] */ ICredentialProviderCredential *pcpc,
-            /* [in] */ DWORD dwFieldID,
-            /* [in] */ BOOL bChecked,
-            /* [in] */ LPCWSTR pszLabel) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetFieldBitmap( 
-            /* [in] */ ICredentialProviderCredential *pcpc,
-            /* [in] */ DWORD dwFieldID,
-            /* [in] */ HBITMAP hbmp) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetFieldComboBoxSelectedItem( 
-            /* [in] */ ICredentialProviderCredential *pcpc,
-            /* [in] */ DWORD dwFieldID,
-            /* [in] */ DWORD dwSelectedItem) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE DeleteFieldComboBoxItem( 
-            /* [in] */ ICredentialProviderCredential *pcpc,
-            /* [in] */ DWORD dwFieldID,
-            /* [in] */ DWORD dwItem) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE AppendFieldComboBoxItem( 
-            /* [in] */ ICredentialProviderCredential *pcpc,
-            /* [in] */ DWORD dwFieldID,
-            /* [string][in] */ LPCWSTR pszItem) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE SetFieldSubmitButton( 
-            /* [in] */ ICredentialProviderCredential *pcpc,
-            /* [in] */ DWORD dwFieldID,
-            /* [in] */ DWORD dwAdjacentTo) = 0;
-        
-        virtual HRESULT STDMETHODCALLTYPE OnCreatingWindow( 
-            /* [out] */ HWND *phwndOwner) = 0;
+        virtual HRESULT STDMETHODCALLTYPE CredentialsChanged( 
+            /* [in] */ UINT_PTR upAdviseContext) = 0;
         
     };
     
     
 #else 	/* C style interface */
 
-    typedef struct ICredentialProviderCredentialEventsVtbl
+    typedef struct ICredentialProviderEventsVtbl
     {
         BEGIN_INTERFACE
         
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            ICredentialProviderCredentialEvents * This,
+            ICredentialProviderEvents * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
             _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            ICredentialProviderCredentialEvents * This);
+            ICredentialProviderEvents * This);
         
         ULONG ( STDMETHODCALLTYPE *Release )( 
-            ICredentialProviderCredentialEvents * This);
+            ICredentialProviderEvents * This);
         
-        HRESULT ( STDMETHODCALLTYPE *SetFieldState )( 
-            ICredentialProviderCredentialEvents * This,
-            /* [in] */ ICredentialProviderCredential *pcpc,
-            /* [in] */ DWORD dwFieldID,
-            /* [in] */ CREDENTIAL_PROVIDER_FIELD_STATE cpfs);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetFieldInteractiveState )( 
-            ICredentialProviderCredentialEvents * This,
-            /* [in] */ ICredentialProviderCredential *pcpc,
-            /* [in] */ DWORD dwFieldID,
-            /* [in] */ CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE cpfis);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetFieldString )( 
-            ICredentialProviderCredentialEvents * This,
-            /* [in] */ ICredentialProviderCredential *pcpc,
-            /* [in] */ DWORD dwFieldID,
-            /* [unique][string][in] */ LPCWSTR psz);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetFieldCheckbox )( 
-            ICredentialProviderCredentialEvents * This,
-            /* [in] */ ICredentialProviderCredential *pcpc,
-            /* [in] */ DWORD dwFieldID,
-            /* [in] */ BOOL bChecked,
-            /* [in] */ LPCWSTR pszLabel);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetFieldBitmap )( 
-            ICredentialProviderCredentialEvents * This,
-            /* [in] */ ICredentialProviderCredential *pcpc,
-            /* [in] */ DWORD dwFieldID,
-            /* [in] */ HBITMAP hbmp);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetFieldComboBoxSelectedItem )( 
-            ICredentialProviderCredentialEvents * This,
-            /* [in] */ ICredentialProviderCredential *pcpc,
-            /* [in] */ DWORD dwFieldID,
-            /* [in] */ DWORD dwSelectedItem);
-        
-        HRESULT ( STDMETHODCALLTYPE *DeleteFieldComboBoxItem )( 
-            ICredentialProviderCredentialEvents * This,
-            /* [in] */ ICredentialProviderCredential *pcpc,
-            /* [in] */ DWORD dwFieldID,
-            /* [in] */ DWORD dwItem);
-        
-        HRESULT ( STDMETHODCALLTYPE *AppendFieldComboBoxItem )( 
-            ICredentialProviderCredentialEvents * This,
-            /* [in] */ ICredentialProviderCredential *pcpc,
-            /* [in] */ DWORD dwFieldID,
-            /* [string][in] */ LPCWSTR pszItem);
-        
-        HRESULT ( STDMETHODCALLTYPE *SetFieldSubmitButton )( 
-            ICredentialProviderCredentialEvents * This,
-            /* [in] */ ICredentialProviderCredential *pcpc,
-            /* [in] */ DWORD dwFieldID,
-            /* [in] */ DWORD dwAdjacentTo);
-        
-        HRESULT ( STDMETHODCALLTYPE *OnCreatingWindow )( 
-            ICredentialProviderCredentialEvents * This,
-            /* [out] */ HWND *phwndOwner);
+        HRESULT ( STDMETHODCALLTYPE *CredentialsChanged )( 
+            ICredentialProviderEvents * This,
+            /* [in] */ UINT_PTR upAdviseContext);
         
         END_INTERFACE
-    } ICredentialProviderCredentialEventsVtbl;
+    } ICredentialProviderEventsVtbl;
 
-    interface ICredentialProviderCredentialEvents
+    interface ICredentialProviderEvents
     {
-        CONST_VTBL struct ICredentialProviderCredentialEventsVtbl *lpVtbl;
+        CONST_VTBL struct ICredentialProviderEventsVtbl *lpVtbl;
     };
 
     
@@ -1265,45 +1370,18 @@ EXTERN_C const IID IID_ICredentialProviderCredentialEvents;
 #ifdef COBJMACROS
 
 
-#define ICredentialProviderCredentialEvents_QueryInterface(This,riid,ppvObject)	\
+#define ICredentialProviderEvents_QueryInterface(This,riid,ppvObject)	\
     ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
 
-#define ICredentialProviderCredentialEvents_AddRef(This)	\
+#define ICredentialProviderEvents_AddRef(This)	\
     ( (This)->lpVtbl -> AddRef(This) ) 
 
-#define ICredentialProviderCredentialEvents_Release(This)	\
+#define ICredentialProviderEvents_Release(This)	\
     ( (This)->lpVtbl -> Release(This) ) 
 
 
-#define ICredentialProviderCredentialEvents_SetFieldState(This,pcpc,dwFieldID,cpfs)	\
-    ( (This)->lpVtbl -> SetFieldState(This,pcpc,dwFieldID,cpfs) ) 
-
-#define ICredentialProviderCredentialEvents_SetFieldInteractiveState(This,pcpc,dwFieldID,cpfis)	\
-    ( (This)->lpVtbl -> SetFieldInteractiveState(This,pcpc,dwFieldID,cpfis) ) 
-
-#define ICredentialProviderCredentialEvents_SetFieldString(This,pcpc,dwFieldID,psz)	\
-    ( (This)->lpVtbl -> SetFieldString(This,pcpc,dwFieldID,psz) ) 
-
-#define ICredentialProviderCredentialEvents_SetFieldCheckbox(This,pcpc,dwFieldID,bChecked,pszLabel)	\
-    ( (This)->lpVtbl -> SetFieldCheckbox(This,pcpc,dwFieldID,bChecked,pszLabel) ) 
-
-#define ICredentialProviderCredentialEvents_SetFieldBitmap(This,pcpc,dwFieldID,hbmp)	\
-    ( (This)->lpVtbl -> SetFieldBitmap(This,pcpc,dwFieldID,hbmp) ) 
-
-#define ICredentialProviderCredentialEvents_SetFieldComboBoxSelectedItem(This,pcpc,dwFieldID,dwSelectedItem)	\
-    ( (This)->lpVtbl -> SetFieldComboBoxSelectedItem(This,pcpc,dwFieldID,dwSelectedItem) ) 
-
-#define ICredentialProviderCredentialEvents_DeleteFieldComboBoxItem(This,pcpc,dwFieldID,dwItem)	\
-    ( (This)->lpVtbl -> DeleteFieldComboBoxItem(This,pcpc,dwFieldID,dwItem) ) 
-
-#define ICredentialProviderCredentialEvents_AppendFieldComboBoxItem(This,pcpc,dwFieldID,pszItem)	\
-    ( (This)->lpVtbl -> AppendFieldComboBoxItem(This,pcpc,dwFieldID,pszItem) ) 
-
-#define ICredentialProviderCredentialEvents_SetFieldSubmitButton(This,pcpc,dwFieldID,dwAdjacentTo)	\
-    ( (This)->lpVtbl -> SetFieldSubmitButton(This,pcpc,dwFieldID,dwAdjacentTo) ) 
-
-#define ICredentialProviderCredentialEvents_OnCreatingWindow(This,phwndOwner)	\
-    ( (This)->lpVtbl -> OnCreatingWindow(This,phwndOwner) ) 
+#define ICredentialProviderEvents_CredentialsChanged(This,upAdviseContext)	\
+    ( (This)->lpVtbl -> CredentialsChanged(This,upAdviseContext) ) 
 
 #endif /* COBJMACROS */
 
@@ -1313,17 +1391,8 @@ EXTERN_C const IID IID_ICredentialProviderCredentialEvents;
 
 
 
-#endif 	/* __ICredentialProviderCredentialEvents_INTERFACE_DEFINED__ */
+#endif 	/* __ICredentialProviderEvents_INTERFACE_DEFINED__ */
 
-
-/* interface __MIDL_itf_credentialprovider_0000_0004 */
-/* [local] */ 
-
-
-
-
-extern RPC_IF_HANDLE __MIDL_itf_credentialprovider_0000_0004_v0_0_c_ifspec;
-extern RPC_IF_HANDLE __MIDL_itf_credentialprovider_0000_0004_v0_0_s_ifspec;
 
 #ifndef __ICredentialProvider_INTERFACE_DEFINED__
 #define __ICredentialProvider_INTERFACE_DEFINED__
@@ -1503,86 +1572,6 @@ EXTERN_C const IID IID_ICredentialProvider;
 #endif 	/* __ICredentialProvider_INTERFACE_DEFINED__ */
 
 
-#ifndef __ICredentialProviderEvents_INTERFACE_DEFINED__
-#define __ICredentialProviderEvents_INTERFACE_DEFINED__
-
-/* interface ICredentialProviderEvents */
-/* [uuid][ref][object] */ 
-
-
-EXTERN_C const IID IID_ICredentialProviderEvents;
-
-#if defined(__cplusplus) && !defined(CINTERFACE)
-    
-    MIDL_INTERFACE("34201e5a-a787-41a3-a5a4-bd6dcf2a854e")
-    ICredentialProviderEvents : public IUnknown
-    {
-    public:
-        virtual HRESULT STDMETHODCALLTYPE CredentialsChanged( 
-            /* [in] */ UINT_PTR upAdviseContext) = 0;
-        
-    };
-    
-    
-#else 	/* C style interface */
-
-    typedef struct ICredentialProviderEventsVtbl
-    {
-        BEGIN_INTERFACE
-        
-        HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            ICredentialProviderEvents * This,
-            /* [in] */ REFIID riid,
-            /* [annotation][iid_is][out] */ 
-            _COM_Outptr_  void **ppvObject);
-        
-        ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            ICredentialProviderEvents * This);
-        
-        ULONG ( STDMETHODCALLTYPE *Release )( 
-            ICredentialProviderEvents * This);
-        
-        HRESULT ( STDMETHODCALLTYPE *CredentialsChanged )( 
-            ICredentialProviderEvents * This,
-            /* [in] */ UINT_PTR upAdviseContext);
-        
-        END_INTERFACE
-    } ICredentialProviderEventsVtbl;
-
-    interface ICredentialProviderEvents
-    {
-        CONST_VTBL struct ICredentialProviderEventsVtbl *lpVtbl;
-    };
-
-    
-
-#ifdef COBJMACROS
-
-
-#define ICredentialProviderEvents_QueryInterface(This,riid,ppvObject)	\
-    ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
-
-#define ICredentialProviderEvents_AddRef(This)	\
-    ( (This)->lpVtbl -> AddRef(This) ) 
-
-#define ICredentialProviderEvents_Release(This)	\
-    ( (This)->lpVtbl -> Release(This) ) 
-
-
-#define ICredentialProviderEvents_CredentialsChanged(This,upAdviseContext)	\
-    ( (This)->lpVtbl -> CredentialsChanged(This,upAdviseContext) ) 
-
-#endif /* COBJMACROS */
-
-
-#endif 	/* C style interface */
-
-
-
-
-#endif 	/* __ICredentialProviderEvents_INTERFACE_DEFINED__ */
-
-
 #ifndef __ICredentialProviderFilter_INTERFACE_DEFINED__
 #define __ICredentialProviderFilter_INTERFACE_DEFINED__
 
@@ -1691,15 +1680,6 @@ EXTERN_C const IID IID_ICredentialProviderFilter;
 #endif 	/* __ICredentialProviderFilter_INTERFACE_DEFINED__ */
 
 
-/* interface __MIDL_itf_credentialprovider_0000_0007 */
-/* [local] */ 
-
-#if (NTDDI_VERSION >= NTDDI_WIN8)
-
-
-extern RPC_IF_HANDLE __MIDL_itf_credentialprovider_0000_0007_v0_0_c_ifspec;
-extern RPC_IF_HANDLE __MIDL_itf_credentialprovider_0000_0007_v0_0_s_ifspec;
-
 #ifndef __ICredentialProviderCredential2_INTERFACE_DEFINED__
 #define __ICredentialProviderCredential2_INTERFACE_DEFINED__
 
@@ -1774,7 +1754,7 @@ EXTERN_C const IID IID_ICredentialProviderCredential2;
             ICredentialProviderCredential2 * This,
             /* [in] */ DWORD dwFieldID,
             /* [annotation][out] */ 
-            _Outptr_result_nullonfailure_  HBITMAP *phbmp);
+            _Outptr_result_nullonfailure_  HANDLE *phbmp);
         
         HRESULT ( STDMETHODCALLTYPE *GetCheckboxValue )( 
             ICredentialProviderCredential2 * This,
@@ -2097,7 +2077,7 @@ EXTERN_C const IID IID_ICredentialProviderCredentialEvents2;
             ICredentialProviderCredentialEvents2 * This,
             /* [in] */ ICredentialProviderCredential *pcpc,
             /* [in] */ DWORD dwFieldID,
-            /* [in] */ HBITMAP hbmp);
+            /* [in] */ HANDLE hbmp);
         
         HRESULT ( STDMETHODCALLTYPE *SetFieldComboBoxSelectedItem )( 
             ICredentialProviderCredentialEvents2 * This,
@@ -2339,15 +2319,6 @@ EXTERN_C const IID IID_ICredentialProviderUser;
 #endif 	/* __ICredentialProviderUser_INTERFACE_DEFINED__ */
 
 
-/* interface __MIDL_itf_credentialprovider_0000_0011 */
-/* [local] */ 
-
-DEFINE_GUID(Identity_LocalUserProvider, 0xA198529B, 0x730F, 0x4089, 0xB6, 0x46, 0xA1, 0x25, 0x57, 0xF5, 0x66, 0x5E);
-
-
-extern RPC_IF_HANDLE __MIDL_itf_credentialprovider_0000_0011_v0_0_c_ifspec;
-extern RPC_IF_HANDLE __MIDL_itf_credentialprovider_0000_0011_v0_0_s_ifspec;
-
 #ifndef __ICredentialProviderUserArray_INTERFACE_DEFINED__
 #define __ICredentialProviderUserArray_INTERFACE_DEFINED__
 
@@ -2548,25 +2519,6 @@ EXTERN_C const IID IID_ICredentialProviderSetUserArray;
 #endif 	/* __ICredentialProviderSetUserArray_INTERFACE_DEFINED__ */
 
 
-/* interface __MIDL_itf_credentialprovider_0000_0013 */
-/* [local] */ 
-
-#endif // (NTDDI_VERSION >= NTDDI_WIN8)
-
-
-extern RPC_IF_HANDLE __MIDL_itf_credentialprovider_0000_0013_v0_0_c_ifspec;
-extern RPC_IF_HANDLE __MIDL_itf_credentialprovider_0000_0013_v0_0_s_ifspec;
-
-
-#ifndef __CredentialProviders_LIBRARY_DEFINED__
-#define __CredentialProviders_LIBRARY_DEFINED__
-
-/* library CredentialProviders */
-/* [uuid] */ 
-
-
-EXTERN_C const IID LIBID_CredentialProviders;
-
 EXTERN_C const CLSID CLSID_PasswordCredentialProvider;
 
 #ifdef __cplusplus
@@ -2696,37 +2648,17 @@ V1WinBioCredentialProvider;
 #endif
 #endif /* __CredentialProviders_LIBRARY_DEFINED__ */
 
-/* interface __MIDL_itf_credentialprovider_0000_0014 */
+/* interface __MIDL_itf_credentialprovider_0000_0001 */
 /* [local] */ 
 
 #endif /* WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) */
 #pragma endregion
 
 
-extern RPC_IF_HANDLE __MIDL_itf_credentialprovider_0000_0014_v0_0_c_ifspec;
-extern RPC_IF_HANDLE __MIDL_itf_credentialprovider_0000_0014_v0_0_s_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_credentialprovider_0000_0001_v0_0_c_ifspec;
+extern RPC_IF_HANDLE __MIDL_itf_credentialprovider_0000_0001_v0_0_s_ifspec;
 
 /* Additional Prototypes for ALL interfaces */
-
-unsigned long             __RPC_USER  HBITMAP_UserSize(     unsigned long *, unsigned long            , HBITMAP * ); 
-unsigned char * __RPC_USER  HBITMAP_UserMarshal(  unsigned long *, unsigned char *, HBITMAP * ); 
-unsigned char * __RPC_USER  HBITMAP_UserUnmarshal(unsigned long *, unsigned char *, HBITMAP * ); 
-void                      __RPC_USER  HBITMAP_UserFree(     unsigned long *, HBITMAP * ); 
-
-unsigned long             __RPC_USER  HWND_UserSize(     unsigned long *, unsigned long            , HWND * ); 
-unsigned char * __RPC_USER  HWND_UserMarshal(  unsigned long *, unsigned char *, HWND * ); 
-unsigned char * __RPC_USER  HWND_UserUnmarshal(unsigned long *, unsigned char *, HWND * ); 
-void                      __RPC_USER  HWND_UserFree(     unsigned long *, HWND * ); 
-
-unsigned long             __RPC_USER  HBITMAP_UserSize64(     unsigned long *, unsigned long            , HBITMAP * ); 
-unsigned char * __RPC_USER  HBITMAP_UserMarshal64(  unsigned long *, unsigned char *, HBITMAP * ); 
-unsigned char * __RPC_USER  HBITMAP_UserUnmarshal64(unsigned long *, unsigned char *, HBITMAP * ); 
-void                      __RPC_USER  HBITMAP_UserFree64(     unsigned long *, HBITMAP * ); 
-
-unsigned long             __RPC_USER  HWND_UserSize64(     unsigned long *, unsigned long            , HWND * ); 
-unsigned char * __RPC_USER  HWND_UserMarshal64(  unsigned long *, unsigned char *, HWND * ); 
-unsigned char * __RPC_USER  HWND_UserUnmarshal64(unsigned long *, unsigned char *, HWND * ); 
-void                      __RPC_USER  HWND_UserFree64(     unsigned long *, HWND * ); 
 
 /* end of Additional Prototypes */
 
