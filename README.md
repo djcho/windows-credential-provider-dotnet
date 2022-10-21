@@ -19,10 +19,13 @@ Windows 의 데스크탑 진입 전의 모듈인만큼 문제가 발생 시 최�
 **주의 : Developer Command Prompt for VS2022 아님**
 
 
-
-1. credentialprovider.tlb 파일 생성
+1. idl 파일 수정
+   - 라이브러리 선언부를 최상위로 옮겨 모든 항목이 Export 되도록 수정
+   - `HBITMAP` 타입을 `HANDLE`로 변경
+   - `HHWND` 타입을 `HANDLE`로 변경
+2. credentialprovider.tlb 파일 생성
    - midl /target NT60 "C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\um\credentialprovider.idl"
-2. interop.dll 파일 생성
+3. interop.dll 파일 생성
    - tlbImp2.exe credentialprovider.tlb /out:CredentialProvider.Interop.dll /unsafe /verbose /preservesig
 
 
