@@ -22,7 +22,15 @@ Windows 의 데스크탑 진입 전의 모듈인만큼 문제가 발생 시 최�
 1. idl 파일 수정
    - 라이브러리 선언부를 최상위로 옮겨 모든 항목이 Export 되도록 수정
    - `HBITMAP` 타입을 `HANDLE`로 변경
+   - ```//중간에 존재하는 위 코드 조각을 파일 가장 윗 부분으로 옮겨야 한다.
+[
+    uuid(d545db01-e522-4a63-af83-d8ddf954004f), // LIBID_CredentialProviders
+]
+library CredentialProviders
+{
+```
    - `HHWND` 타입을 `HANDLE`로 변경
+    - `ICredentialProviderCredentialEvents` 인터페이스의 `OnCreatingWindow()` out 파라매터로 변경되어야 정상동작 함
 2. credentialprovider.tlb 파일 생성
    - midl /target NT60 "C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\um\credentialprovider.idl"
 3. interop.dll 파일 생성
