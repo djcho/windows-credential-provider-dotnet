@@ -1,5 +1,6 @@
 # Windows Credential Provider in C# 
 
+
 ## Overview
 
 이 저장소는 Windows 시작 시 가장 처음으로 출력되는 사용자 인증 화면을 커스터마이징 할 수 있도록 기능을 제공하는 Windows Credential Provider(이하 CP) 의 C# 버전이다. Windows 에서 제공하는 CP 관련 idl 파일(Interface Description Language)을 사용하여 tlb파일(Type Library)을 추출한 뒤 COM Interop 기술을 사용해 .NET용 dll 파일(Managed Library)을 생성하여 LogonUI.exe 에 의해 호출되도록 한다.
