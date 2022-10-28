@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace CSharpCredentialProvider
 {
@@ -7,18 +8,36 @@ namespace CSharpCredentialProvider
     {
         // From http://www.pinvoke.net/default.aspx/secur32/LsaLogonUser.html
         [StructLayout(LayoutKind.Sequential)]
-        struct LUID
+        public struct LUID
         {
             public uint LowPart;
             public uint HighPart;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        struct UNICODE_STRING
+        public struct UNICODE_STRING
         {
             public UInt16 Length;
             public UInt16 MaximumLength;
             public IntPtr Buffer;
+
+            public UNICODE_STRING(string s)
+            {
+                Length = (ushort)(s.Length * 2);
+                MaximumLength = (ushort)(Length);
+                Buffer = Marshal.StringToHGlobalUni(s);
+            }
+
+            public void Dispose()
+            {
+                Marshal.FreeHGlobal(Buffer);
+                Buffer = IntPtr.Zero;
+            }
+
+            public override string ToString()
+            {
+                return Marshal.PtrToStringUni(Buffer);
+            }
         }
 
         public enum KERB_LOGON_SUBMIT_TYPE
@@ -37,19 +56,31 @@ namespace CSharpCredentialProvider
             KerbNoElevationLogon = 83,
             KerbLuidLogon = 84,
         }
+        public enum CRED_PROTECTION_TYPE
+        {
+            CredUnprotected = 0,
+            CredUserProtection,
+            CredTrustedProtection
+        }
+
+        public enum WINERROR
+        {
+            ERROR_INSUFFICIENT_BUFFER = 122,
+        }
+
         public struct KERB_INTERACTIVE_LOGON
         {
-            KERB_LOGON_SUBMIT_TYPE MessageType;
-            UNICODE_STRING LogonDomainName;
-            UNICODE_STRING UserName;
-            UNICODE_STRING Password;
+            public KERB_LOGON_SUBMIT_TYPE MessageType;
+            public UNICODE_STRING LogonDomainName;
+            public UNICODE_STRING UserName;
+            public UNICODE_STRING Password;
         }
 
         [StructLayout(LayoutKind.Sequential)]
         public struct KERB_INTERACTIVE_UNLOCK_LOGON
         {
-            KERB_INTERACTIVE_LOGON Logon;
-            LUID LogonId;
+            public KERB_INTERACTIVE_LOGON Logon;
+            public LUID LogonId;
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -106,6 +137,20 @@ namespace CSharpCredentialProvider
             IntPtr pPackedCredentials,
             ref int pcbPackedCredentials);
 
+        [DllImport("Advapi32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        public static extern bool CredProtect(
+            bool fAsSelf,
+            string szCredentials,
+            int cchCredentials,
+            StringBuilder szProtectedCredentials,
+            ref uint pcchMaxChars,
+            out CRED_PROTECTION_TYPE ProtectionType);
+
+        [DllImport("Advapi32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        public static extern bool CredIsProtected(
+            string szProtectedCredentials,
+            out CRED_PROTECTION_TYPE pProtectionType);
+
         [DllImport("secur32.dll", SetLastError = false)]
         public static extern uint LsaConnectUntrusted([Out] out IntPtr lsaHandle);
 
@@ -114,5 +159,22 @@ namespace CSharpCredentialProvider
 
         [DllImport("secur32.dll", SetLastError = false)]
         public static extern uint LsaDeregisterLogonProcess([In] IntPtr lsaHandle);
+
+        public enum MessageBoxCheckFlags : uint
+        {
+            MB_OK = 0x00000000,
+            MB_OKCANCEL = 0x00000001,
+            MB_YESNO = 0x00000004,
+            MB_ICONHAND = 0x00000010,
+            MB_ICONQUESTION = 0x00000020,
+            MB_ICONEXCLAMATION = 0x00000030,
+            MB_ICONINFORMATION = 0x00000040
+        }
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern int MessageBox(IntPtr hWnd, string lpText, string lpCaption, uint uType);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern void CopyMemory(IntPtr destination, IntPtr source, int length);
     }
 }

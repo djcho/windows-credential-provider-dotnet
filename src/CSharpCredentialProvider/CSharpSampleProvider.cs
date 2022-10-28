@@ -8,7 +8,7 @@
     [ComVisible(true)]
     [Guid(Constants.CredentialProviderUID)]
     [ClassInterface(ClassInterfaceType.None)]
-    [ProgId("Rebootify.TestWindowsCredentialProvider")]
+    [ProgId("CSharpProvider.CSharpSampleProvider")]
     public class CSharpSampleProvider : ICharpSampleProvider
     {
         private _CREDENTIAL_PROVIDER_USAGE_SCENARIO _cpus = _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_INVALID;
@@ -19,7 +19,8 @@
 
         public CSharpSampleProvider()
         {
-            Log.LogText("TestWindowsCredentialProvider: Created object");
+            Log.LogMethodCall();
+            Log.LogText("CSharpSampleProvider: Created object");
         }
 
         // SetUsageScenario is the provider's cue that it's going to be asked for tiles
@@ -132,7 +133,6 @@
         {
             Log.LogMethodCall();
 
-
             pdwDefault = unchecked ((uint)-1);
             pbAutoLogonWithDefault = 0; // Try to auto-logon when all credential managers are enumerated (before the tile selection)
 
@@ -153,12 +153,12 @@
         public int GetCredentialAt(uint dwIndex, out ICredentialProviderCredential ppcpc)
         {
             Log.LogMethodCall();
-
+            
             if (_pCredential == null)
             {
                 _pCredential = new CSharpSampleCredential();
             }
-            
+
             ppcpc = (ICredentialProviderCredential)_pCredential;
             return HResultValues.S_OK;
         }
@@ -184,12 +184,11 @@
             uint userCount = 0;
             _pCredProviderUserArray.GetCount(out userCount);
 
-            MessageBox.Show(userCount.ToString());
-
             return HResultValues.S_OK;
         }
         void CreateEnumeratedCredentials()
         {
+            Log.LogMethodCall();
             switch (_cpus)
             {
                 case _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_LOGON:
@@ -205,6 +204,7 @@
 
         void ReleaseEnumeratedCredentials()
         {
+            Log.LogMethodCall();
             if (_pCredential != null)
             {
                 var intPtr = Marshal.GetIUnknownForObject(_pCredential);
@@ -215,6 +215,7 @@
        
         int EnumerateCredentials()
         {
+            Log.LogMethodCall();
             int hr = HResultValues.E_UNEXPECTED;
             if (_pCredProviderUserArray != null)
             {
@@ -228,7 +229,7 @@
                     {
                         _pCredential = new CSharpSampleCredential();
                         if (_pCredential != null)
-                        {
+                        {                            
                             hr = _pCredential.Initialize(_cpus, Field.s_rgCredProvFieldDescriptors, Field.s_rgFieldStatePairs, pCredUser);
                             if (hr < 0)
                             {

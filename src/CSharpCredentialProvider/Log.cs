@@ -2,6 +2,7 @@
 {
     using System;
     using System.Diagnostics;
+    using System.IO;
     using System.Runtime.CompilerServices;
 
     public static class Log
@@ -10,7 +11,7 @@
         {
             try
             {
-                Console.WriteLine(text);
+                File.AppendAllText(Environment.SpecialFolder.Desktop + @"\CSharpCredentialProvider.log", text + Environment.NewLine);
             }
             catch (Exception)
             {

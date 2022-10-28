@@ -47,9 +47,12 @@ namespace CSharpCredentialProvider
             Field.FIELD_STATE_PAIR[] rgfsp,
             ICredentialProviderUser pcpUser)
         {
+            Log.LogMethodCall();
+#if DEBUG
+            MessageBox.Show("initialize braek point");
+#endif
             int hr = HResultValues.S_OK;
             _cpus = cpus;
-
             Guid guidProvider;
             pcpUser.GetProviderID(out guidProvider);
             _fIsLocalUser = (guidProvider == Guid.Parse(Constants.Identity_LocalUserProvider));
@@ -59,9 +62,8 @@ namespace CSharpCredentialProvider
             for (int i = 0; hr >= 0 && i < _rgCredProvFieldDescriptors.Length; i++)
             {
                 _rgFieldStatePairs[i] = rgfsp[i];
-                hr = Helpers.FieldDescriptorCopy(rgcpfd[i], _rgCredProvFieldDescriptors[i]);
+                hr = Helpers.FieldDescriptorCopy(rgcpfd[i], out _rgCredProvFieldDescriptors[i]);
             }
-
             // Initialize the String value of all the fields.
             _rgFieldStrings[(int)Field.SAMPLE_FIELD_ID.SFI_LABEL] = "Sample Credential";
             _rgFieldStrings[(int)Field.SAMPLE_FIELD_ID.SFI_LARGE_TEXT] = "Sample Credential Provider";
@@ -74,10 +76,10 @@ namespace CSharpCredentialProvider
             _rgFieldStrings[(int)Field.SAMPLE_FIELD_ID.SFI_HIDECONTROLS_LINK] = "Hide additional controls";
 
             hr = pcpUser.GetStringValue(Constants.PKEY_Identity_QualifiedUserName, out _pszQualifiedUserName);
-            if(hr >= 0)
+            if (hr >= 0)
             {
                 string pszUserName;
-                hr = pcpUser.GetStringValue(Constants.PKEY_Identity_UserName, out pszUserName);
+                pcpUser.GetStringValue(Constants.PKEY_Identity_UserName, out pszUserName);
                 if (!string.IsNullOrEmpty(pszUserName))
                 {
                     _rgFieldStrings[(int)Field.SAMPLE_FIELD_ID.SFI_FULLNAME_TEXT] = "User Name: " + pszUserName;
@@ -90,7 +92,7 @@ namespace CSharpCredentialProvider
             if (hr >= 0)
             {
                 string pszDisplayName;
-                hr = pcpUser.GetStringValue(Constants.PKEY_Identity_DisplayName, out pszDisplayName);
+                pcpUser.GetStringValue(Constants.PKEY_Identity_DisplayName, out pszDisplayName);
                 if (!string.IsNullOrEmpty(pszDisplayName))
                 {
                     _rgFieldStrings[(int)Field.SAMPLE_FIELD_ID.SFI_DISPLAYNAME_TEXT] = "Display Name: " + pszDisplayName;
@@ -103,7 +105,7 @@ namespace CSharpCredentialProvider
             if (hr >= 0)
             {
                 string pszLogonStatus;
-                hr = pcpUser.GetStringValue(Constants.PKEY_Identity_LogonStatusString, out pszLogonStatus);
+                pcpUser.GetStringValue(Constants.PKEY_Identity_LogonStatusString, out pszLogonStatus);
                 if (!string.IsNullOrEmpty(pszLogonStatus))
                 {
                     _rgFieldStrings[(int)Field.SAMPLE_FIELD_ID.SFI_LOGONSTATUS_TEXT] = "Logon Status: " + pszLogonStatus;
@@ -117,14 +119,14 @@ namespace CSharpCredentialProvider
             {
                 hr = pcpUser.GetSid(out _pszUserSid);
             }
-
             return hr;
         }
 
         // LogonUI calls this in order to give us a callback in case we need to notify it of anything.
         public int Advise(ICredentialProviderCredentialEvents pcpce)
         {
-            if(_pCredProvCredentialEvents != null)
+            Log.LogMethodCall();
+            if (_pCredProvCredentialEvents != null)
             {
                 var intPtr = Marshal.GetIUnknownForObject(_pCredProvCredentialEvents);
                 Marshal.Release(intPtr);
@@ -142,6 +144,7 @@ namespace CSharpCredentialProvider
         // LogonUI calls this to tell us to release the callback.
         public int UnAdvise()
         {
+            Log.LogMethodCall();
             if (_pCredProvCredentialEvents != null)
             {
                 var intPtr = Marshal.GetIUnknownForObject(_pCredProvCredentialEvents);
@@ -159,6 +162,7 @@ namespace CSharpCredentialProvider
         // selected, you would do it here.
         public int SetSelected(out int pbAutoLogon)
         {
+            Log.LogMethodCall();
             pbAutoLogon = 0;
             return HResultValues.S_OK;
         }
@@ -168,6 +172,7 @@ namespace CSharpCredentialProvider
         // is to clear out the password field.
         public int SetDeselected()
         {
+            Log.LogMethodCall();
             if (!string.IsNullOrEmpty(_rgFieldStrings[(int)Field.SAMPLE_FIELD_ID.SFI_PASSWORD]))
             {
                 _rgFieldStrings[(int)Field.SAMPLE_FIELD_ID.SFI_PASSWORD] = "";
@@ -185,6 +190,7 @@ namespace CSharpCredentialProvider
         // to display the tile.
         public int GetFieldState(uint dwFieldID, out _CREDENTIAL_PROVIDER_FIELD_STATE pcpfs, out _CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE pcpfis)
         {
+            Log.LogMethodCall();
             int hr = HResultValues.S_OK;
             // Validate our parameters.
             if ((dwFieldID) < _rgFieldStatePairs.Length)
@@ -206,6 +212,7 @@ namespace CSharpCredentialProvider
         // Sets ppwsz to the string value of the field at the index dwFieldID
         public int GetStringValue(uint dwFieldID, out string ppsz)
         {
+            Log.LogMethodCall();
             ppsz = null;
             int hr = HResultValues.S_OK;
             
@@ -226,6 +233,7 @@ namespace CSharpCredentialProvider
         // Get the image to show in the user tile
         public int GetBitmapValue(uint dwFieldID, out IntPtr phbmp)
         {
+            Log.LogMethodCall();
             int hr = HResultValues.S_OK;
             phbmp = IntPtr.Zero;
 
@@ -253,6 +261,7 @@ namespace CSharpCredentialProvider
         // Returns whether a checkbox is checked or not as well as its label.
         public int GetCheckboxValue(uint dwFieldID, out int pbChecked, out string ppszLabel)
         {
+            Log.LogMethodCall();
             int hr = HResultValues.S_OK;
             pbChecked = 0;
             ppszLabel = null;
@@ -279,6 +288,7 @@ namespace CSharpCredentialProvider
         // should be below the submit button.
         public int GetSubmitButtonValue(uint dwFieldID, out uint pdwAdjacentTo)
         {
+            Log.LogMethodCall();
             int hr = HResultValues.S_OK;
             pdwAdjacentTo = 0;
 
@@ -301,6 +311,7 @@ namespace CSharpCredentialProvider
         // currently selected item (pdwSelectedItem).
         public int GetComboBoxValueCount(uint dwFieldID, out uint pcItems, out uint pdwSelectedItem)
         {
+            Log.LogMethodCall();
             int hr = HResultValues.S_OK;
             pcItems = 0;
             pdwSelectedItem = 0;
@@ -324,6 +335,7 @@ namespace CSharpCredentialProvider
         // Called iteratively to fill the combobox with the string (ppwszItem) at index dwItem.
         public int GetComboBoxValueAt(uint dwFieldID, uint dwItem, out string ppszItem)
         {
+            Log.LogMethodCall();
             int hr = HResultValues.S_OK;
             ppszItem = null;
 
@@ -346,6 +358,7 @@ namespace CSharpCredentialProvider
         // This is called on each keystroke when a user types into an edit field
         public int SetStringValue(uint dwFieldID, string psz)
         {
+            Log.LogMethodCall();
             int hr = HResultValues.S_OK;
 
             if((dwFieldID < _rgCredProvFieldDescriptors.Length) && 
@@ -366,6 +379,7 @@ namespace CSharpCredentialProvider
         // Sets whether the specified checkbox is checked or not.
         public int SetCheckboxValue(uint dwFieldID, int bChecked)
         {
+            Log.LogMethodCall();
             int hr = HResultValues.S_OK;
 
             // Validate parameters.
@@ -405,6 +419,7 @@ namespace CSharpCredentialProvider
 
         public int CommandLinkClicked(uint dwFieldID)
         {
+            Log.LogMethodCall();
             int hr = HResultValues.S_OK;
 
             _CREDENTIAL_PROVIDER_FIELD_STATE cpfsShow = _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_HIDDEN;
@@ -413,19 +428,17 @@ namespace CSharpCredentialProvider
             if((dwFieldID < _rgCredProvFieldDescriptors.Length) &&
                 (_CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_COMMAND_LINK == _rgCredProvFieldDescriptors[dwFieldID].cpft))
             {
-                IntPtr hwndOwner = IntPtr.Zero;
+                IntPtr hwndOwner = IntPtr.Zero;                
                 switch (dwFieldID)
                 {
                     case (uint)Field.SAMPLE_FIELD_ID.SFI_LAUNCHWINDOW_LINK:
                         if (_pCredProvCredentialEvents != null)
                         {
-                            _pCredProvCredentialEvents.OnCreatingWindow(hwndOwner);
+                            _pCredProvCredentialEvents.OnCreatingWindow(out hwndOwner);
                         }
 
-                        // Pop a messagebox indicating the click.                            
-                        HwndSource hwndSource = HwndSource.FromHwnd(hwndOwner);
-                        Window window = hwndSource.RootVisual as Window;
-                        MessageBox.Show(window, "Command link clicked", "Click!", 0);
+                        // Pop a messagebox indicating the click.                                                   
+                        PInvoke.MessageBox(hwndOwner, "Command link clicked", "Click!", (uint)PInvoke.MessageBoxCheckFlags.MB_OK);
                         break;
                     case (uint)Field.SAMPLE_FIELD_ID.SFI_HIDECONTROLS_LINK:
                         _pCredProvCredentialEvents.BeginFieldUpdates();
@@ -461,8 +474,9 @@ namespace CSharpCredentialProvider
             out string ppszOptionalStatusText,
             out _CREDENTIAL_PROVIDER_STATUS_ICON pcpsiOptionalStatusIcon)
         {
+            Log.LogMethodCall();
             int hr = HResultValues.E_UNEXPECTED;
-            pcpcs = default;
+            pcpcs = new _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION();
             pcpgsr = _CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE.CPGSR_NO_CREDENTIAL_NOT_FINISHED;
             ppszOptionalStatusText = null;
             pcpsiOptionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_NONE;
@@ -493,7 +507,7 @@ namespace CSharpCredentialProvider
                                 {
                                     pcpcs.clsidCredentialProvider = Guid.Parse(Constants.CredentialProviderUID);
                                     pcpcs.ulAuthenticationPackage = authPackage;
-                                    pcpgsr = _CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE.CPGSR_NO_CREDENTIAL_FINISHED;
+                                    pcpgsr = _CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE.CPGSR_RETURN_CREDENTIAL_FINISHED;
                                 }
                             }
                         }
@@ -530,7 +544,7 @@ namespace CSharpCredentialProvider
                             // By setting this to CPGSR_RETURN_CREDENTIAL_FINISHED we are letting logonUI know
                             // that we have all the information we need and it should attempt to submit the
                             // serialized credential.
-                            pcpgsr = _CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE.CPGSR_NO_CREDENTIAL_FINISHED;
+                            pcpgsr = _CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE.CPGSR_RETURN_CREDENTIAL_FINISHED;
                         }                        
                     }
                     else
@@ -558,6 +572,7 @@ namespace CSharpCredentialProvider
         // being disabled.
         public int ReportResult(int ntsStatus, int ntsSubstatus, out string ppszOptionalStatusText, out _CREDENTIAL_PROVIDER_STATUS_ICON pcpsiOptionalStatusIcon)
         {
+            Log.LogMethodCall();
             ppszOptionalStatusText = string.Empty;
             pcpsiOptionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_NONE;
 
@@ -596,6 +611,7 @@ namespace CSharpCredentialProvider
         // Gets the SID of the user corresponding to the credential.
         public int GetUserSid(out string sid)
         {
+            Log.LogMethodCall();
             sid = _pszUserSid;
             // Return S_FALSE with a null SID in ppszSid for the
             // credential to be associated with an empty user tile.
@@ -605,6 +621,7 @@ namespace CSharpCredentialProvider
         // GetFieldOptions to enable the password reveal button and touch keyboard auto-invoke in the password field.
         public int GetFieldOptions(uint fieldID, out CREDENTIAL_PROVIDER_CREDENTIAL_FIELD_OPTIONS options)
         {
+            Log.LogMethodCall();
             options = CREDENTIAL_PROVIDER_CREDENTIAL_FIELD_OPTIONS.CPCFO_NONE;
 
             if(fieldID == (uint)Field.SAMPLE_FIELD_ID.SFI_PASSWORD)
