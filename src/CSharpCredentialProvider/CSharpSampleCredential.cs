@@ -14,7 +14,7 @@ namespace CSharpCredentialProvider
     [ComVisible(true)]
     [Guid(Constants.CredentialProviderTileUID)]
     [ClassInterface(ClassInterfaceType.None)]
-    public class CSharpSampleCredential : ICSharpSampleCredential
+    public class CSharpSampleCredential : ICredentialProviderCredential2, ICredentialProviderCredentialWithFieldOptions
     {        
         // The usage scenario for which we were enumerated.
         private _CREDENTIAL_PROVIDER_USAGE_SCENARIO _cpus;

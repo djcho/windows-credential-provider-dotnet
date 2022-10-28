@@ -9,7 +9,7 @@
     [Guid(Constants.CredentialProviderUID)]
     [ClassInterface(ClassInterfaceType.None)]
     [ProgId("CSharpProvider.CSharpSampleProvider")]
-    public class CSharpSampleProvider : ICharpSampleProvider
+    public class CSharpSampleProvider : ICredentialProvider, ICredentialProviderSetUserArray
     {
         private _CREDENTIAL_PROVIDER_USAGE_SCENARIO _cpus = _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_INVALID;
         private ICredentialProviderUserArray _pCredProviderUserArray = null;
