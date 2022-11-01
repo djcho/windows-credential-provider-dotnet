@@ -107,5 +107,4 @@ Windows Registry Editor Version 5.00
 - https://stackoverflow.com/questions/36425318/windows-credential-provider-in-c-sharp
 - https://stackoverflow.com/questions/16092696/windows-credential-provider-with-c-sharp/23496878#23496878
 - https://learn.microsoft.com/en-us/windows/win32/secauthn/credential-providers-in-windows
-
 - https://learn.microsoft.com/en-us/samples/microsoft/windows-classic-samples/credential-provider/
