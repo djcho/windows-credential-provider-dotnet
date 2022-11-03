@@ -34,8 +34,9 @@ library CredentialProviders
 ```
 
 - `HBITMAP` 타입을 `HANDLE`로 변경
-
-
+- ICredentialProviderFilter 메서드 변경
+ - GUID* rgclsidProviders -> GUID** rgclsidProviders[]
+ - [in, out, size_is(cProviders), annotation("_Inout_updates_(cProviders)")] BOOL* rgbAllow -> [ref] BOOL** rgbAllow[]
 
 #### TypeLibrary 파일 생성
 
