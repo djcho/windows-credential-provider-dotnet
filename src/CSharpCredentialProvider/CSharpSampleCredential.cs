@@ -612,10 +612,13 @@ namespace CSharpCredentialProvider
         public int GetUserSid(out string sid)
         {
             Log.LogMethodCall();
-            sid = _pszUserSid;
+            sid = _pszUserSid;            
+            if (sid == null)
+                return HResultValues.S_FALSE;
+
             // Return S_FALSE with a null SID in ppszSid for the
             // credential to be associated with an empty user tile.
-            return HResultValues.S_OK; ;
+            return HResultValues.S_OK;
         }
 
         // GetFieldOptions to enable the password reveal button and touch keyboard auto-invoke in the password field.
