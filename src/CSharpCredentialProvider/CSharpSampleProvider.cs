@@ -1,6 +1,9 @@
 ﻿namespace CSharpCredentialProvider
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net;
     using System.Runtime.InteropServices;
     using System.Windows;
     using CredentialProvider.Interop;
@@ -13,7 +16,7 @@
     {
         private _CREDENTIAL_PROVIDER_USAGE_SCENARIO _cpus = _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_INVALID;
         private ICredentialProviderUserArray _pCredProviderUserArray = null;
-        private CSharpSampleCredential _pCredential = null;
+        private List<CSharpSampleCredential> _pCredentialList = new List<CSharpSampleCredential>();
         private bool _fRecreateEnumeratedCredentials = false;
 
 
@@ -133,9 +136,6 @@
         {
             Log.LogMethodCall();
 
-            pdwDefault = unchecked ((uint)-1);
-            pbAutoLogonWithDefault = 0; // Try to auto-logon when all credential managers are enumerated (before the tile selection)
-
             if (_fRecreateEnumeratedCredentials)
             {
                 _fRecreateEnumeratedCredentials = false;
@@ -143,7 +143,9 @@
                 CreateEnumeratedCredentials();
             }
 
-            pdwCount = 1; // Credential tiles number
+            pdwCount = (uint)_pCredentialList.Count; // Credential tiles number
+            pdwDefault = unchecked((uint)-1);
+            pbAutoLogonWithDefault = Convert.ToInt32(false); // Try to auto-logon when all credential managers are enumerated (before the tile selection)
 
             return HResultValues.S_OK;
         }
@@ -153,13 +155,7 @@
         public int GetCredentialAt(uint dwIndex, out ICredentialProviderCredential ppcpc)
         {
             Log.LogMethodCall();
-            
-            if (_pCredential == null)
-            {
-                _pCredential = new CSharpSampleCredential();
-            }
-
-            ppcpc = (ICredentialProviderCredential)_pCredential;
+            ppcpc = _pCredentialList.ElementAt((int)dwIndex);
             return HResultValues.S_OK;
         }
 
@@ -205,51 +201,59 @@
         void ReleaseEnumeratedCredentials()
         {
             Log.LogMethodCall();
-            if (_pCredential != null)
-            {
-                var intPtr = Marshal.GetIUnknownForObject(_pCredential);
-                Marshal.Release(intPtr);
-                _pCredential = null;
-            }
+            if (this._pCredentialList == null ||
+                this._pCredentialList.Count == 0)
+                return;
+
+            this._pCredentialList.Clear();
         }
        
-        int EnumerateCredentials()
+        void EnumerateCredentials()
         {
-            Log.LogMethodCall();
-            int hr = HResultValues.E_UNEXPECTED;
-            if (_pCredProviderUserArray != null)
+            try
             {
-                uint dwUserCount = 0;
+                int hr = HResultValues.E_UNEXPECTED;
+                if (_pCredProviderUserArray == null)
+                    return;
+
+                uint dwUserCount;
                 _pCredProviderUserArray.GetCount(out dwUserCount);
-                if (dwUserCount > 0)
+
+                if (dwUserCount > 0) // Create credentials for any number of users.
                 {
-                    ICredentialProviderUser pCredUser;
-                    hr = _pCredProviderUserArray.GetAt(0, out pCredUser);
-                    if (hr >= 0)
+                    for (uint i = 0; i < dwUserCount; i++)
                     {
-                        _pCredential = new CSharpSampleCredential();
-                        if (_pCredential != null)
-                        {                            
-                            hr = _pCredential.Initialize(_cpus, Field.s_rgCredProvFieldDescriptors, Field.s_rgFieldStatePairs, pCredUser);
-                            if (hr < 0)
-                            {
-                                var intPtr = Marshal.GetIUnknownForObject(_pCredential);
-                                Marshal.Release(intPtr);
-                                _pCredential = null;
-                            }
-                        }
-                        else
-                        {
-                            hr = HResultValues.E_OUTOFMEMORY;
-                        }
-                        {
-                            var intPtr = Marshal.GetIUnknownForObject(pCredUser);
-                            Marshal.Release(intPtr);                            
-                        }
+                        ICredentialProviderUser pCredUser;
+                        hr = this._pCredProviderUserArray.GetAt(i, out pCredUser);
+                        if (hr < 0)
+                            continue;
+
+                        CreateCredential(pCredUser);                        
                     }
                 }
+
+                if ((dwUserCount == 0) || Helpers.IsInDomain() == true) // Creating credentials for other users in the AD environment.
+                    CreateCredential(null);
             }
-            return hr;
+            catch (Exception ex)
+            {
+                Log.LogText(ex.ToString());
+            }
+        }
+
+        void CreateCredential(ICredentialProviderUser pCredUser)
+        {
+            try
+            {
+                CSharpSampleCredential sharpSampleCredential = new CSharpSampleCredential();
+                sharpSampleCredential.Initialize(_cpus, Field.s_rgCredProvFieldDescriptors, Field.s_rgFieldStatePairs, pCredUser);
+                this._pCredentialList.Add(sharpSampleCredential);
+            }
+            catch (Exception ex)
+            {
+                Log.LogText(ex.ToString());
+                throw ex;
+            }
         }
     }
 }

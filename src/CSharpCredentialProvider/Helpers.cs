@@ -1,5 +1,6 @@
 ﻿using CredentialProvider.Interop;
 using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Text;
 using static CSharpCredentialProvider.PInvoke;
@@ -8,6 +9,25 @@ namespace CSharpCredentialProvider
 {
     public class Helpers
     {
+        public static bool IsInDomain()
+        {
+            Win32.NetJoinStatus status = Win32.NetJoinStatus.NetSetupUnknownStatus;
+            IntPtr pDomain = IntPtr.Zero;
+            int result = Win32.NetGetJoinInformation(null, out pDomain, out status);
+            if (pDomain != IntPtr.Zero)
+            {
+                Win32.NetApiBufferFree(pDomain);
+            }
+            if (result == 0)
+            {
+                return status == Win32.NetJoinStatus.NetSetupDomainName;
+            }
+            else
+            {
+                throw new Exception("Domain Info Get Failed", new Win32Exception());
+            }
+        }
+
         public static int FieldDescriptorCoAllocCopy(_CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR rcpfd, [Out] IntPtr ppcpfd)
         {
             try
