@@ -48,9 +48,6 @@ namespace CSharpCredentialProvider
             ICredentialProviderUser pcpUser)
         {
             Log.LogMethodCall();
-#if DEBUG
-            MessageBox.Show("initialize braek point");
-#endif
             int hr = HResultValues.S_OK;
             _cpus = cpus;
             Guid guidProvider;
